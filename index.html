@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manik Singh Mehra</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -39,17 +40,14 @@
             transition: background 0.5s ease, color 0.5s ease, opacity 0.4s ease;
         }
 
-        /* Active Link System Highlight */
         .active {
             opacity: 1 !important;
         }
 
-        /* Soft page transition */
         body.fade-out {
             opacity: 0;
         }
 
-        /* Subtle night glow for dark mode */
         body.dark {
             background: radial-gradient(circle at 70% 20%,
                     rgba(255, 255, 255, 0.04),
@@ -57,7 +55,6 @@
                 #0d0f14;
         }
 
-        /* grain texture */
         body::after {
             content: "";
             position: fixed;
@@ -82,7 +79,6 @@
             width: 100%;
         }
 
-        /* Mode Toggle Button */
         .toggle {
             position: fixed;
             top: 40px;
@@ -128,7 +124,6 @@
             }
         }
 
-        /* Staggered Section Reveal */
         .link-item {
             display: flex;
             flex-direction: column;
@@ -185,7 +180,6 @@
             cursor: default;
         }
 
-        /* Icon list */
         .icon-list {
             display: flex;
             flex-direction: column;
@@ -193,7 +187,6 @@
             margin-left: 4px;
         }
 
-        /* Single item section optimization */
         .link-item .icon-list:has(a:only-child) {
             gap: 0;
         }
@@ -211,7 +204,6 @@
             width: fit-content;
         }
 
-        /* Balancing single long items */
         .link-item .icon-list a:only-child {
             font-size: 16.5px;
         }
@@ -222,10 +214,8 @@
             height: 12px;
             fill: currentColor;
             opacity: 0.35;
-            /* Reduced dominance of the "dot" */
             transition: all 0.3s ease;
             transform: translateY(-0.5px);
-            /* Optical center correction */
         }
 
         .icon-list>a:hover,
@@ -254,13 +244,21 @@
             max-height: 0;
             opacity: 0;
             overflow: hidden;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
         }
 
         .hover-dropdown:hover .sub-menu {
             max-height: 100px;
             opacity: 1;
             margin-top: 10px;
+            margin-bottom: 2px;
+        }
+
+        /* Mobile tap toggle state */
+        .sub-menu.open {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 8px;
             margin-bottom: 2px;
         }
 
@@ -293,61 +291,52 @@
             transform: scale(1.2);
         }
 
-        /* Responsive */
+        /* NARROW EDITORIAL STRIP FOR MOBILE */
         @media (max-width: 600px) {
             body {
-                padding: 40px 20px 80px 20px;
+                padding: 50px 20px 100px 20px;
                 letter-spacing: 0.06em;
             }
 
             .container {
-                max-width: 100%;
+                max-width: 320px;
             }
 
             .name {
                 font-size: 13px;
-                margin-bottom: 40px;
-                text-align: center;
+                margin-bottom: 50px;
+                text-align: left;
             }
 
             .links {
-                gap: 36px;
+                gap: 40px;
             }
 
             .link-item {
-                align-items: center;
+                align-items: flex-start;
             }
 
             .section-heading {
-                text-align: center;
+                text-align: left;
                 margin-bottom: 12px;
+                font-size: 12px;
+                opacity: 0.4;
             }
 
             .icon-list {
+                align-items: flex-start;
                 gap: 14px;
-                align-items: center;
+                margin-left: 2px;
             }
 
             .icon-list>a,
             .hover-dropdown>a {
-                font-size: 16px;
-                justify-content: center;
-            }
-
-            .link-item .icon-list a:only-child {
+                justify-content: flex-start;
                 font-size: 16px;
             }
 
-            .hover-dropdown .sub-menu {
-                max-height: none;
-                opacity: 1;
-                margin-top: 8px;
-                margin-left: 0;
-                align-items: center;
-            }
-
-            .sub-menu a {
-                justify-content: center;
+            .sub-menu {
+                margin-left: 18px;
             }
 
             .toggle {
@@ -505,11 +494,26 @@
             }
         });
 
+        // Mobile Dropdown Toggle
+        document.querySelectorAll(".hover-dropdown > a").forEach(link => {
+            link.addEventListener("click", function (e) {
+                if (window.innerWidth <= 600) {
+                    e.preventDefault();
+                    const menu = this.nextElementSibling;
+                    menu.classList.toggle("open");
+                }
+            });
+        });
+
         // Fade-out transition
         document.querySelectorAll("a").forEach(link => {
             link.addEventListener("click", function (e) {
                 const href = this.getAttribute("href");
                 if (href && href !== "#" && !href.startsWith("http") && !href.startsWith("mailto")) {
+                    // Don't fade out if it's just toggling the mobile menu
+                    if (this.parentElement.classList.contains("hover-dropdown") && window.innerWidth <= 600) {
+                        return;
+                    }
                     e.preventDefault();
                     document.body.classList.add("fade-out");
                     setTimeout(() => { window.location.href = href; }, 400);
@@ -520,10 +524,12 @@
         // Tactile Micro-Sound
         const sound = document.getElementById("hoverSound");
         document.querySelectorAll("a").forEach(link => {
-            link.addEventListener("mouseenter", () => {
-                sound.volume = 0.05;
-                sound.currentTime = 0;
-                sound.play().catch(() => { });
+            ['mouseenter', 'touchstart'].forEach(evt => {
+                link.addEventListener(evt, () => {
+                    sound.volume = 0.05;
+                    sound.currentTime = 0;
+                    sound.play().catch(() => { });
+                }, { passive: true });
             });
         });
     </script>
