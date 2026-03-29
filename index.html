@@ -36,6 +36,7 @@
             --text: #e6e6e6;
             --muted: rgba(255, 255, 255, 0.4);
             --line: rgba(255, 255, 255, 0.08);
+            background: #0d0f14;
         }
 
         * {
@@ -62,29 +63,21 @@
             opacity: 0;
         }
 
-        body.dark {
-            background: radial-gradient(circle at 70% 20%,
-                    rgba(255, 255, 255, 0.04),
-                    transparent 40%),
-                #0d0f14;
-        }
-
         body::after {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
-            opacity: 0.12;
+            opacity: 0;
+            /* Killed in light mode for ultra-clean surface */
             pointer-events: none;
-            mix-blend-mode: multiply;
+            mix-blend-mode: normal;
             transition: opacity 0.5s ease;
         }
 
         body.dark::after {
-            opacity: 0.25;
+            opacity: 0.06;
+            /* Subtle texture only in dark mode */
             mix-blend-mode: overlay;
         }
 
@@ -182,6 +175,8 @@
             flex-direction: column;
             gap: 60px;
             animation: float 8s ease-in-out infinite;
+            transition: filter 0.3s ease;
+            /* Smooth background blur fade */
         }
 
         @keyframes float {
@@ -468,11 +463,12 @@
             font-weight: 500;
         }
 
-        /* Hidden Message Overlay - Cinematic Dynamic Blur */
+        /* Hidden Message Overlay - Global Base (Desktop) */
         .message-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.12);
+            background: rgba(0, 0, 0, 0);
+            /* Base state */
             backdrop-filter: blur(0px);
             -webkit-backdrop-filter: blur(0px);
             display: flex;
@@ -481,29 +477,35 @@
             padding: 40px 20px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease, backdrop-filter 0.35s ease;
+            transition:
+                opacity 0.25s ease,
+                backdrop-filter 0.4s ease,
+                -webkit-backdrop-filter 0.4s ease,
+                background 0.3s ease;
             z-index: 999;
         }
 
         .message-overlay.active {
             opacity: 1;
             pointer-events: auto;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(8px) saturate(110%);
+            -webkit-backdrop-filter: blur(8px) saturate(110%);
+            background: rgba(0, 0, 0, 0.08);
+            /* very light dim */
         }
 
         .message-box {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 26px;
             padding: 34px 38px;
             max-width: 420px;
             width: 100%;
             text-align: center;
             box-shadow:
-                0 25px 80px rgba(0, 0, 0, 0.18),
+                0 20px 60px rgba(0, 0, 0, 0.12),
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
             transform: translateY(10px) scale(0.94);
             opacity: 0;
@@ -513,11 +515,13 @@
         }
 
         body.dark .message-box {
-            background: rgba(20, 20, 20, 0.75);
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .message-overlay.active .message-box {
@@ -564,16 +568,6 @@
             body {
                 padding: 50px 20px 100px 20px;
                 letter-spacing: 0.06em;
-                -webkit-mask-image: linear-gradient(to bottom,
-                        transparent,
-                        black 40px,
-                        black calc(100% - 40px),
-                        transparent);
-                mask-image: linear-gradient(to bottom,
-                        transparent,
-                        black 40px,
-                        black calc(100% - 40px),
-                        transparent);
             }
 
             .container {
@@ -583,14 +577,15 @@
             .top-center {
                 align-items: flex-start;
                 margin-bottom: 0;
-                position: sticky;
-                top: 0;
-                background: color-mix(in srgb, var(--bg) 85%, transparent);
-                z-index: 10;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                backdrop-filter: blur(6px);
-                -webkit-backdrop-filter: blur(6px);
+                position: static;
+                background: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                padding: 0;
+            }
+
+            .search-wrap {
+                display: none !important;
             }
 
             .name {
@@ -599,18 +594,16 @@
                 font-size: 13px;
             }
 
-            .search-wrap {
-                display: none;
-            }
-
-            .search-wrap.force-show {
-                display: flex;
-                width: 100%;
-                margin-bottom: 30px;
-            }
-
             .links {
                 gap: 40px;
+            }
+
+            body.modal-open .links {
+                filter: blur(4px);
+            }
+
+            .link-item:first-child {
+                margin-top: 10px;
             }
 
             .section-heading {
@@ -645,13 +638,35 @@
                 font-size: 11px;
             }
 
+            /* --- MOBILE MESSAGE OVERLAY TWEAKS --- */
             .message-overlay {
                 padding: 20px;
             }
 
+            /* STRONG blur + dim ONLY on mobile */
+            .message-overlay.active {
+                background: rgba(0, 0, 0, 0.6);
+                /* MUCH stronger dim */
+                backdrop-filter: blur(40px) saturate(180%);
+                -webkit-backdrop-filter: blur(40px) saturate(180%);
+            }
+
+            /* Make box more solid on mobile */
             .message-box {
                 padding: 26px 22px;
                 border-radius: 18px;
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.6);
+            }
+
+            /* Dark mode mobile */
+            body.dark .message-overlay.active {
+                background: rgba(0, 0, 0, 0.75);
+            }
+
+            body.dark .message-box {
+                background: rgba(20, 20, 20, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.12);
             }
         }
     </style>
@@ -905,46 +920,28 @@
         const searchInput = document.getElementById("searchInput");
         const filterableLinks = document.querySelectorAll(".icon-list a:not(.sub-menu a)");
 
-        searchInput.addEventListener("input", () => {
-            const value = searchInput.value.toLowerCase();
-            filterableLinks.forEach(link => {
-                const text = link.innerText.toLowerCase();
-                if (text.includes(value)) {
-                    link.style.display = "flex";
-                } else {
-                    link.style.display = "none";
+        if (searchInput) {
+            searchInput.addEventListener("input", () => {
+                const value = searchInput.value.toLowerCase();
+                filterableLinks.forEach(link => {
+                    const text = link.innerText.toLowerCase();
+                    if (text.includes(value)) {
+                        link.style.display = "flex";
+                    } else {
+                        link.style.display = "none";
+                    }
+                });
+            });
+
+            searchInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    const visible = [...filterableLinks].find(link => link.style.display !== "none");
+                    if (visible) {
+                        window.open(visible.href, "_blank");
+                    }
                 }
             });
-        });
-
-        searchInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                const visible = [...filterableLinks].find(link => link.style.display !== "none");
-                if (visible) {
-                    window.open(visible.href, "_blank");
-                }
-            }
-        });
-
-        // Double Tap To Search (Mobile Hidden Power)
-        let lastTap = 0;
-        document.addEventListener("touchend", (e) => {
-            const now = new Date().getTime();
-            const tapGap = now - lastTap;
-            if (tapGap < 300 && tapGap > 0) {
-                if (window.innerWidth > 600) return;
-                if (searchWrap && searchInput) {
-                    searchWrap.classList.add("force-show");
-                    searchInput.focus();
-                    searchInput.addEventListener("blur", () => {
-                        searchWrap.classList.remove("force-show");
-                        searchInput.value = "";
-                        searchInput.dispatchEvent(new Event("input"));
-                    }, { once: true });
-                }
-            }
-            lastTap = now;
-        });
+        }
 
         // Auto-Generate Shortcuts
         const shortcutOverlay = document.getElementById("shortcutOverlay");
@@ -970,7 +967,7 @@
         document.addEventListener("keydown", function (e) {
             const key = e.key.toLowerCase();
             if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-            if (key === "/" && window.innerWidth > 600) {
+            if (key === "/" && window.innerWidth > 600 && searchInput) {
                 e.preventDefault();
                 searchInput.focus();
                 return;
@@ -983,6 +980,7 @@
             if (key === "escape") {
                 document.getElementById("shortcutOverlay").classList.remove("active");
                 document.getElementById("messageOverlay").classList.remove("active");
+                document.body.classList.remove("modal-open");
                 return;
             }
             if (shortcutMap[key]) {
@@ -996,41 +994,24 @@
             }
         });
 
-        // Hidden Message Logic with Tactile Scale & Long Press
+        // UNIVERSAL TAP / CLICK (works everywhere)
         const messageOverlay = document.getElementById("messageOverlay");
         const nameEl = document.querySelector(".name");
 
         nameEl.addEventListener("click", () => {
-            if (window.innerWidth <= 600) return;
             nameEl.style.transform = "scale(0.96)";
+            if (navigator.vibrate) navigator.vibrate(40); // kept a tiny tactile click feel
             setTimeout(() => {
                 nameEl.style.transform = "";
+                document.body.classList.add("modal-open");
                 messageOverlay.classList.add("active");
-            }, 120);
-        });
-
-        let pressTimer;
-        nameEl.addEventListener("touchstart", (e) => {
-            nameEl.style.transform = "scale(0.96)";
-            pressTimer = setTimeout(() => {
-                messageOverlay.classList.add("active");
-                if (navigator.vibrate) navigator.vibrate(40);
-            }, 500);
-        }, { passive: true });
-
-        nameEl.addEventListener("touchend", () => {
-            nameEl.style.transform = "";
-            clearTimeout(pressTimer);
-        });
-
-        nameEl.addEventListener("touchmove", () => {
-            nameEl.style.transform = "";
-            clearTimeout(pressTimer);
+            }, 100);
         });
 
         messageOverlay.addEventListener("click", (e) => {
             if (e.target === messageOverlay) {
                 messageOverlay.classList.remove("active");
+                document.body.classList.remove("modal-open");
             }
         });
     </script>
