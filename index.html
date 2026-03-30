@@ -22,6 +22,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons.min.js"></script>
+
     <style>
         /* CSS Variables for Dual Atmosphere */
         :root {
@@ -291,7 +293,9 @@
             width: 17px;
             height: 17px;
             fill: currentColor;
-            opacity: 0.45;
+            opacity: 0.5;
+            /* updated to 0.5 to soften brand clashes */
+            display: inline-block;
             transition: all 0.3s ease;
             transform: translateY(1px);
         }
@@ -713,6 +717,20 @@
                         </svg>
                         github
                     </a>
+                    <a href="https://substack.com/@maniksinghmehra" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M2.667 3.333h18.666v2.667H2.667zm0 4h18.666v13.334H2.667zm2.667 2.667v8h13.333v-8z" />
+                        </svg>
+                        substack
+                    </a>
+                    <a href="https://www.strava.com/athletes/194103095" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M15.387 17.944l-2.813-5.525-2.81 5.525h-2.6l5.41-10.554 5.413 10.554zM7.17 22l2.6-5.082L12.57 22z" />
+                        </svg>
+                        strava
+                    </a>
                     <a href="https://in.pinterest.com/maniksinghmehra/" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
                             <path
@@ -722,8 +740,7 @@
                     </a>
                     <a href="https://letterboxd.com/maniksinghmehra/" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
-                            <path
-                                d="M2.08 7.39h3.13v11.28H2.08zM7.21 7.39h5.06v2.09h-1.93v2.44h1.65v2.09h-1.65v2.56h1.93v2.1H7.21zM19.82 13.04c0-3.15-2.5-5.66-5.65-5.66s-5.66 2.51-5.66 5.66 2.51 5.66 5.66 5.66 5.65-2.51 5.65-5.66zm-5.65 3.56c-1.96 0-3.56-1.6-3.56-3.56s1.6-3.56 3.56-3.56 3.56 1.6 3.56 3.56-1.6 3.56-3.56 3.56z" />
+                            <path d="M0 12a6 6 0 1 1 12 0 6 6 0 1 1 12 0 6 6 0 1 1-12 0A6 6 0 1 1 0 12z" />
                         </svg>
                         letterboxd
                     </a>
@@ -761,7 +778,7 @@
                     <a href="https://www.last.fm/user/maniksinghmehra" target="_blank" rel="noopener noreferrer"><svg
                             viewBox="0 0 24 24">
                             <path
-                                d="M7.054 13.921c-1.375 0-2.458-1.01-2.458-2.396 0-1.424 1.066-2.44 2.458-2.44 1.107 0 1.83.565 2.152 1.405l1.642-.647c-.55-1.382-1.85-2.228-3.794-2.228-2.316 0-4.183 1.62-4.183 3.91 0 2.27 1.85 3.864 4.14 3.864 1.897 0 3.29-.906 3.882-2.342l-1.627-.678c-.352.887-1.1 1.552-2.212 1.552zm9.184-4.832c-1.144 0-1.995.535-2.525 1.514V6.848h-1.88v8.32H13.7v-1.13c.49.904 1.348 1.365 2.418 1.365 1.88 0 3.335-1.366 3.335-3.155 0-1.82-1.455-3.16-3.215-3.16zm-.43 4.88c-.964 0-1.685-.754-1.685-1.74 0-.964.72-1.71 1.686-1.71.95 0 1.655.746 1.655 1.71 0 .986-.705 1.74-1.656 1.74zM24 10.9v4.267h-1.804V11.23c0-.98-.61-1.545-1.482-1.545-.887 0-1.498.565-1.498 1.546v3.935h-1.803V11.23c0-.98-.614-1.545-1.483-1.545-.886 0-1.5.565-1.5 1.546v3.935h-1.804v-6.03h1.728v.86c.49-.69 1.256-.99 2.053-.99.98 0 1.774.456 2.14 1.21.46-.8 1.334-1.21 2.253-1.21 1.483 0 2.4 1 2.4 2.6z" />
+                                d="M10.584 17.209c-2.064 0-3.344-1.065-3.344-2.84 0-1.641 1.065-2.84 3.344-2.84 1.422 0 2.417.711 2.844 1.919l2.062-.781c-.64-1.848-2.133-2.986-4.977-2.986-3.271 0-5.545 1.989-5.545 4.688 0 2.7 2.133 4.546 5.403 4.546 2.844 0 4.406-1.28 5.119-3.128l-2.062-.781c-.426 1.066-1.35 1.846-2.844 1.846z" />
                         </svg>last.fm</a>
                 </div>
             </div>
@@ -769,11 +786,12 @@
             <div class="link-item">
                 <div class="section-heading">stuff</div>
                 <div class="icon-list">
-                    <a href="https://top10albums.vercel.app/" target="_blank" rel="noopener noreferrer"><svg
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                        </svg>top 10 albums of 2025</a>
+                    <a href="https://top10albums.vercel.app/" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 6h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8z" />
+                        </svg>
+                        top 10 albums of 2025
+                    </a>
                 </div>
             </div>
 
