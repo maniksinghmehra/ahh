@@ -80,7 +80,6 @@
             inset: 0;
             background: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
             opacity: 0;
-            /* Killed in light mode for ultra-clean surface */
             pointer-events: none;
             mix-blend-mode: normal;
             transition: opacity 0.5s ease;
@@ -88,7 +87,6 @@
 
         body.dark::after {
             opacity: 0.06;
-            /* Subtle texture only in dark mode */
             mix-blend-mode: overlay;
         }
 
@@ -187,7 +185,6 @@
             gap: 60px;
             animation: float 8s ease-in-out infinite;
             transition: filter 0.3s ease;
-            /* Smooth background blur fade */
         }
 
         @keyframes float {
@@ -294,10 +291,27 @@
             height: 17px;
             fill: currentColor;
             opacity: 0.5;
-            /* updated to 0.5 to soften brand clashes */
             display: inline-block;
             transition: all 0.3s ease;
-            transform: translateY(1px);
+            transform: translateY(2px);
+        }
+
+        /* Specific Icon Adjustments */
+        .icon-list a[href*="strava"] svg {
+            transform: translateY(2px) scale(0.95);
+        }
+
+        .icon-list a[href*="spotify"] svg {
+            transform: scale(1.1) translateY(2px);
+        }
+
+        .icon-list a[href*="top10albums"] svg {
+            transform: translateY(2px) scale(1);
+        }
+
+        /* --- THE SECRET SAUCE: Visual Mass Cheat for Letterboxd --- */
+        .icon-list>a:nth-child(7) svg {
+            transform: scale(1.12) translateY(2px);
         }
 
         .icon-list>a:hover,
@@ -309,7 +323,52 @@
         .icon-list>a:hover svg,
         .hover-dropdown>a:hover svg {
             opacity: 0.9;
-            transform: scale(1.1) translateY(1px);
+            transform: scale(1.05) translateY(2px);
+        }
+
+        /* Specific Icon Hover Adjustments */
+        .icon-list>a[href*="strava"]:hover svg {
+            transform: scale(1.0) translateY(2px);
+        }
+
+        .icon-list>a[href*="spotify"]:hover svg {
+            transform: scale(1.15) translateY(2px);
+        }
+
+        .icon-list>a[href*="top10albums"]:hover svg {
+            transform: scale(1.05) translateY(2px);
+        }
+
+        /* Keep the visual mass cheat intact during hover */
+        .icon-list>a:nth-child(7):hover svg {
+            transform: scale(1.22) translateY(2px);
+        }
+
+        /* --- LETTERBOXD CIRCLE HOVER ANIMATION --- */
+        .icon-list a svg circle,
+        .hover-dropdown a svg circle {
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            transform-origin: center;
+        }
+
+        /* Spread effect & Opacity Shift */
+        .icon-list a:hover svg circle:nth-child(1),
+        .hover-dropdown a:hover svg circle:nth-child(1) {
+            transform: translateX(-1.5px);
+            opacity: 0.6;
+        }
+
+        .icon-list a:hover svg circle:nth-child(3),
+        .hover-dropdown a:hover svg circle:nth-child(3) {
+            transform: translateX(1.5px);
+            opacity: 1;
+        }
+
+        /* Optional: tiny pulse & Opacity Shift */
+        .icon-list a:hover svg circle:nth-child(2),
+        .hover-dropdown a:hover svg circle:nth-child(2) {
+            transform: scale(1.15);
+            opacity: 0.9;
         }
 
         .hover-dropdown {
@@ -369,8 +428,22 @@
         .email-row {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
             position: relative;
+        }
+
+        .email-row svg {
+            width: 17px;
+            height: 17px;
+            fill: currentColor;
+            opacity: 0.5;
+            transform: translateY(2px);
+            transition: all 0.3s ease;
+        }
+
+        .email-row:hover svg {
+            opacity: 0.9;
+            transform: translateY(2px) scale(1.08);
         }
 
         .email-link {
@@ -481,7 +554,6 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0);
-            /* Base state */
             backdrop-filter: blur(0px);
             -webkit-backdrop-filter: blur(0px);
             display: flex;
@@ -504,7 +576,6 @@
             backdrop-filter: blur(8px) saturate(110%);
             -webkit-backdrop-filter: blur(8px) saturate(110%);
             background: rgba(0, 0, 0, 0.08);
-            /* very light dim */
         }
 
         .message-box {
@@ -576,7 +647,7 @@
             }
         }
 
-        /* MOBILE ENHANCEMENTS: Scroll Fade, Sticky Top, Breathing Space */
+        /* MOBILE ENHANCEMENTS */
         @media (max-width: 600px) {
             body {
                 padding: 50px 20px 100px 20px;
@@ -647,19 +718,16 @@
                 font-size: 11px;
             }
 
-            /* --- MOBILE MESSAGE OVERLAY TWEAKS --- */
             .message-overlay {
                 padding: 20px;
             }
 
             .message-overlay.active {
                 background: rgba(0, 0, 0, 0.08);
-                /* same as desktop */
                 backdrop-filter: blur(8px) saturate(110%);
                 -webkit-backdrop-filter: blur(8px) saturate(110%);
             }
 
-            /* Make box more solid on mobile */
             .message-box {
                 padding: 26px 22px;
                 border-radius: 18px;
@@ -667,7 +735,6 @@
                 border: 1px solid rgba(255, 255, 255, 0.6);
             }
 
-            /* Dark mode mobile */
             body.dark .message-box {
                 background: rgba(20, 20, 20, 0.9);
                 border: 1px solid rgba(255, 255, 255, 0.12);
@@ -713,25 +780,30 @@
                     <a href="https://github.com/maniksinghmehra" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
                             <path
-                                d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.38 7.86 10.9.57.1.78-.25.78-.55v-2.02c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.3-1.7-1.3-1.7-1.07-.73.08-.72.08-.72 1.18.08 1.8 1.2 1.8 1.2 1.05 1.8 2.75 1.28 3.42.98.1-.76.4-1.28.72-1.57-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.3 1.2-3.12-.12-.3-.52-1.5.12-3.12 0 0 .98-.31 3.2 1.2a11.1 11.1 0 0 1 5.82 0c2.22-1.51 3.2-1.2 3.2-1.2.64 1.62.24 2.82.12 3.12.75.82 1.2 1.86 1.2 3.12 0 4.43-2.68 5.4-5.24 5.69.41.35.78 1.04.78 2.1v3.12c0 .3.21.65.79.54A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
+                                d="M12 .5C5.65 .5 .5 5.65 .5 12c0 5.08 3.29 9.38 7.86 10.9.57.1.78-.25.78-.55v-2.02c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.3-1.7-1.3-1.7-1.07-.73.08-.72.08-.72 1.18.08 1.8 1.2 1.8 1.2 1.05 1.8 2.75 1.28 3.42.98.1-.76.4-1.28.72-1.57-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.3 1.2-3.12-.12-.3-.52-1.5.12-3.12 0 0 .98-.31 3.2 1.2a11.1 11.1 0 0 1 5.82 0c2.22-1.51 3.2-1.2 3.2-1.2.64 1.62.24 2.82.12 3.12.75.82 1.2 1.86 1.2 3.12 0 4.43-2.68 5.4-5.24 5.69.41.35.78 1.04.78 2.1v3.12c0 .3.21.65.79.54A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35 .5 12 .5z" />
                         </svg>
                         github
                     </a>
                     <a href="https://substack.com/@maniksinghmehra" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
-                            <path
-                                d="M2.667 3.333h18.666v2.667H2.667zm0 4h18.666v13.334H2.667zm2.667 2.667v8h13.333v-8z" />
+                            <rect x="6" y="3" width="12" height="1.5" fill="currentColor" />
+                            <rect x="6" y="6" width="12" height="1.5" fill="currentColor" />
+                            <path d="M6 9 H18 V20 L12 15.5 L6 20 Z" fill="currentColor" />
                         </svg>
                         substack
                     </a>
                     <a href="https://www.strava.com/athletes/194103095" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
-                            <path
-                                d="M15.387 17.944l-2.813-5.525-2.81 5.525h-2.6l5.41-10.554 5.413 10.554zM7.17 22l2.6-5.082L12.57 22z" />
+                            <polygon
+                                points="15.365 24 20.5 13.687 17.388 13.687 15.366 17.821 13.312 13.687 10.199 13.687"
+                                fill="currentColor" />
+                            <polygon points="10.471 0 3.5 13.687 7.607 13.687 10.471 8.245 13.312 13.687 17.387 13.687"
+                                fill="currentColor" />
                         </svg>
                         strava
                     </a>
-                    <a href="https://in.pinterest.com/maniksinghmehra/_profile/" target="_blank" rel="noopener noreferrer">
+                    <a href="https://in.pinterest.com/maniksinghmehra/_profile/" target="_blank"
+                        rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
                             <path
                                 d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.41 2.967 7.41 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z" />
@@ -740,7 +812,9 @@
                     </a>
                     <a href="https://letterboxd.com/maniksinghmehra/" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
-                            <path d="M0 12a6 6 0 1 1 12 0 6 6 0 1 1 12 0 6 6 0 1 1-12 0A6 6 0 1 1 0 12z" />
+                            <circle cx="6.5" cy="12" r="3.6" opacity="0.45" fill="currentColor" />
+                            <circle cx="12" cy="12" r="3.6" opacity="0.75" fill="currentColor" />
+                            <circle cx="17.5" cy="12" r="3.6" opacity="1" fill="currentColor" />
                         </svg>
                         letterboxd
                     </a>
@@ -766,20 +840,25 @@
                 <div class="section-heading">music</div>
                 <div class="icon-list">
                     <a href="https://open.spotify.com/user/g1m679iqc73354twwvgzi7cdq?nd=1&dlsi=b77088885e3b48c5"
-                        target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.84.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.84.241 1.2zM20.16 9.6C16.32 7.32 9.48 7.14 5.52 8.34c-.6.18-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.56-1.32 12.12-1.08 16.56 1.56.54.3.72 1.02.42 1.56-.24.6-.96.72-1.68.24z" />
-                        </svg>spotify</a>
+                        target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 16 16">
+                            <path fill="currentColor"
+                                d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm3.67 11.548a.499.499 0 0 1-.696.122c-1.875-1.318-4.994-1.391-7.1-.9a.5.5 0 0 1-.226-.975c2.315-.536 5.775-.438 7.9 1.057a.5.5 0 0 1 .122.696zm.976-1.951a.5.5 0 0 1-.698.114C9.773 8.15 7.101 7.762 3.535 8.49a.5.5 0 1 1-.201-.98c3.857-.787 6.779-.347 9.197 1.388a.502.502 0 0 1 .115.699zm.986-2.62a.5.5 0 0 1-.695.133c-2.757-1.871-6.948-1.88-9.661-.92a.5.5 0 1 1-.333-.944C5.894 4.203 10.467 4.225 13.5 6.282a.502.502 0 0 1 .132.695z" />
+                        </svg>
+                        spotify
+                    </a>
                     <a href="https://music.apple.com/profile/maniksinghmehra?ls" target="_blank"
                         rel="noopener noreferrer"><svg viewBox="0 0 24 24">
                             <path
                                 d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.71.825-1.353 2.259-1.157 3.635 1.365.106 2.69-.71 3.444-1.623z" />
                         </svg>apple music</a>
-                    <a href="https://www.last.fm/user/maniksinghmehra" target="_blank" rel="noopener noreferrer"><svg
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M10.584 17.209c-2.064 0-3.344-1.065-3.344-2.84 0-1.641 1.065-2.84 3.344-2.84 1.422 0 2.417.711 2.844 1.919l2.062-.781c-.64-1.848-2.133-2.986-4.977-2.986-3.271 0-5.545 1.989-5.545 4.688 0 2.7 2.133 4.546 5.403 4.546 2.844 0 4.406-1.28 5.119-3.128l-2.062-.781c-.426 1.066-1.35 1.846-2.844 1.846z" />
-                        </svg>last.fm</a>
+                    <a href="https://www.last.fm/user/maniksinghmehra" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 512 284.495">
+                            <path fill="currentColor"
+                                d="M225.781 253.399l-18.825-51.005s-30.493 34.028-76.19 34.028c-40.523 0-69.223-35.2-69.223-91.497 0-72.097 36.381-97.892 72.098-97.892 51.584 0 67.996 33.412 82.109 76.207l18.825 58.591c18.811 56.895 54.021 102.609 155.398 102.609 72.7 0 122.027-22.31 122.027-80.915 0-47.488-27.008-72.097-77.417-83.897l-37.495-8.193c-25.808-5.884-33.412-16.412-33.412-34.028 0-19.906 15.806-31.711 41.614-31.711 28.185 0 43.393 10.591 45.687 35.812l58.6-7.002C504.874 21.694 468.493 0 408.693 0c-52.812 0-104.406 19.906-104.406 83.907 0 39.903 19.391 65.082 68.006 76.8l39.903 9.401c29.877 7.011 39.894 19.391 39.894 36.391 0 21.694-21.097 30.493-60.991 30.493-59.211 0-83.906-31.108-97.905-73.895l-19.391-58.591C249.299 28.208 209.998.091 132.012.091 45.792.091 0 54.591 0 147.297c0 89.093 45.697 137.198 127.916 137.198 66.2 0 97.892-31.104 97.892-31.104z" />
+                        </svg>
+                        last.fm
+                    </a>
                 </div>
             </div>
 
@@ -788,7 +867,10 @@
                 <div class="icon-list">
                     <a href="https://top10albums.vercel.app/" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24">
-                            <path d="M4 6h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8z" />
+                            <circle cx="12" cy="11" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2" />
+                            <circle cx="12" cy="11" r="1.4" fill="currentColor" />
+                            <path d="M6 16.5h12M7.5 18.5h9" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" />
                         </svg>
                         top 10 albums of 2025
                     </a>
@@ -799,6 +881,10 @@
                 <div class="section-heading">contact</div>
                 <div class="icon-list">
                     <div class="email-row">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                            <path d="M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
                         <a href="mailto:maniksinghmehra@gmail.com" class="email-link">email</a>
                         <span class="copy-btn" data-email="maniksinghmehra@gmail.com">⧉</span>
                     </div>
