@@ -322,14 +322,29 @@
     }
 
     .icon-list>a svg,
-    .hover-dropdown>a svg {
+    .hover-dropdown>a svg,
+    .icon-list>a .site-favicon {
       width: 17px;
       height: 17px;
-      fill: currentColor;
       opacity: 0.5;
       display: inline-block;
       transition: all 0.3s ease;
       transform: translateY(2px);
+    }
+
+    .icon-list>a svg,
+    .hover-dropdown>a svg {
+      fill: currentColor;
+    }
+
+    .icon-list>a .site-favicon {
+      object-fit: contain;
+      opacity: 0.75;
+      filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.55));
+    }
+
+    body.dark .icon-list>a .site-favicon {
+      filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
     }
 
     /* Specific Icon Adjustments */
@@ -357,7 +372,8 @@
     }
 
     .icon-list>a:hover svg,
-    .hover-dropdown>a:hover svg {
+    .hover-dropdown>a:hover svg,
+    .icon-list>a:hover .site-favicon {
       opacity: 0.9;
       transform: scale(1.05) translateY(2px);
     }
@@ -901,7 +917,7 @@
         <div class="icon-list">
         
           <a href="https://top10albums.vercel.app/" target="_blank" rel="noopener noreferrer">
-            <span style="font-size:18px; opacity:0.6;">:|</span>
+            <img class="site-favicon" src="https://top10albums.vercel.app/osama.png" alt="">
             top 10 albums of 2025
           </a>
         
