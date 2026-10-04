@@ -67,6 +67,22 @@
       overflow-x: hidden;
     }
 
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .active {
       opacity: 1 !important;
     }
@@ -125,6 +141,10 @@
       top: 40px;
       right: 40px;
       font-size: 12px;
+      color: var(--text);
+      font-family: inherit;
+      background: none;
+      border: 0;
       opacity: 0.4;
       cursor: pointer;
       transition: opacity 0.3s ease;
@@ -133,7 +153,8 @@
       z-index: 100;
     }
 
-    .toggle:hover {
+    .toggle:hover,
+    .toggle:focus-visible {
       opacity: 0.8;
     }
 
@@ -150,6 +171,10 @@
       text-align: center;
       margin-bottom: 20px;
       font-size: 15px;
+      color: var(--text);
+      font-family: inherit;
+      background: none;
+      border: 0;
       opacity: 0.5;
       letter-spacing: 0.25em;
       cursor: pointer;
@@ -159,8 +184,14 @@
       position: relative;
     }
 
-    .name:hover {
+    .name:hover,
+    .name:focus-visible {
       opacity: 0.8;
+    }
+
+    :focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 4px;
     }
 
     /* SEARCH — APPLE STYLE CENTERED */
@@ -282,7 +313,7 @@
     }
 
     .icon-list>a:hover,
-    .hover-dropdown>a:hover {
+    .hover-dropdown>button:hover {
       text-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
     }
 
@@ -309,20 +340,25 @@
     }
 
     .icon-list>a,
-    .hover-dropdown>a {
+    .hover-dropdown>button {
       font-size: 17.5px;
       opacity: 0.75;
       text-decoration: none;
       color: var(--text);
+      font-family: inherit;
+      background: none;
+      border: 0;
       transition: all 0.3s ease;
       display: flex;
       align-items: baseline;
       gap: 10px;
       width: fit-content;
+      cursor: pointer;
+      text-align: left;
     }
 
     .icon-list>a svg,
-    .hover-dropdown>a svg,
+    .hover-dropdown>button svg,
     .icon-list>a .site-favicon {
       width: 17px;
       height: 17px;
@@ -333,7 +369,7 @@
     }
 
     .icon-list>a svg,
-    .hover-dropdown>a svg {
+    .hover-dropdown>button svg {
       fill: currentColor;
     }
 
@@ -366,13 +402,13 @@
     }
 
     .icon-list>a:hover,
-    .hover-dropdown>a:hover {
+    .hover-dropdown>button:hover {
       opacity: 1;
       transform: translateX(6px);
     }
 
     .icon-list>a:hover svg,
-    .hover-dropdown>a:hover svg,
+    .hover-dropdown>button:hover svg,
     .icon-list>a:hover .site-favicon {
       opacity: 0.9;
       transform: scale(1.05) translateY(2px);
@@ -398,27 +434,27 @@
 
     /* --- LETTERBOXD CIRCLE HOVER ANIMATION --- */
     .icon-list a svg circle,
-    .hover-dropdown a svg circle {
+    .hover-dropdown button svg circle {
       transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
       transform-origin: center;
     }
 
     /* Spread effect & Opacity Shift */
     .icon-list a:hover svg circle:nth-child(1),
-    .hover-dropdown a:hover svg circle:nth-child(1) {
+    .hover-dropdown button:hover svg circle:nth-child(1) {
       transform: translateX(-1.5px);
       opacity: 0.6;
     }
 
     .icon-list a:hover svg circle:nth-child(3),
-    .hover-dropdown a:hover svg circle:nth-child(3) {
+    .hover-dropdown button:hover svg circle:nth-child(3) {
       transform: translateX(1.5px);
       opacity: 1;
     }
 
     /* Optional: tiny pulse & Opacity Shift */
     .icon-list a:hover svg circle:nth-child(2),
-    .hover-dropdown a:hover svg circle:nth-child(2) {
+    .hover-dropdown button:hover svg circle:nth-child(2) {
       transform: scale(1.15);
       opacity: 0.9;
     }
@@ -521,9 +557,13 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
       color: var(--text);
       transform: translateY(-1px);
+      font-family: inherit;
+      background: none;
+      border: 0;
     }
 
-    .email-row:hover .copy-btn {
+    .email-row:hover .copy-btn,
+    .copy-btn:focus-visible {
       opacity: 0.5;
     }
 
@@ -545,8 +585,9 @@
       align-items: center;
       justify-content: center;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
       z-index: 999;
     }
 
@@ -556,10 +597,13 @@
 
     .shortcut-overlay.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: all;
+      transition-delay: 0s;
     }
 
     .shortcut-box {
+      position: relative;
       background: var(--bg);
       border: 1px solid var(--line);
       padding: 40px;
@@ -574,10 +618,30 @@
 
     .shortcut-title {
       font-size: 12px;
+      font-weight: normal;
       opacity: 0.4;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      margin-bottom: 24px;
+      margin: 0 0 24px;
+    }
+
+    .overlay-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: var(--text);
+      font: inherit;
+      font-size: 18px;
+      line-height: 1;
+      background: none;
+      border: 0;
+      padding: 6px;
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    .overlay-close:hover {
+      opacity: 1;
     }
 
     .shortcut-item {
@@ -613,24 +677,29 @@
       justify-content: center;
       padding: 40px 20px;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
       transition:
         opacity 0.25s ease,
         backdrop-filter 0.4s ease,
         -webkit-backdrop-filter 0.4s ease,
-        background 0.3s ease;
+        background 0.3s ease,
+        visibility 0s linear 0.25s;
       z-index: 999;
     }
 
     .message-overlay.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition-delay: 0s;
       backdrop-filter: blur(8px) saturate(110%);
       -webkit-backdrop-filter: blur(8px) saturate(110%);
       background: rgba(0, 0, 0, 0.08);
     }
 
     .message-box {
+      position: relative;
       background: rgba(255, 255, 255, 0.55);
       backdrop-filter: blur(20px) saturate(140%);
       -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -752,7 +821,7 @@
       }
 
       .icon-list>a,
-      .hover-dropdown>a {
+      .hover-dropdown>button {
         justify-content: flex-start;
         font-size: 16px;
       }
@@ -800,13 +869,13 @@
 
   <audio id="hoverSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_click.mp3" preload="auto"></audio>
 
-  <div class="toggle" id="modeToggle" onclick="toggleMode()">night</div>
+  <button class="toggle" id="modeToggle" type="button" aria-label="Switch to day mode">night</button>
 
   <div class="container">
     <div class="top-center">
-      <div class="name">MANIK SINGH MEHRA</div>
+      <button class="name" type="button" aria-haspopup="dialog" aria-controls="messageOverlay">MANIK SINGH MEHRA</button>
       <div class="search-wrap">
-        <input id="searchInput" type="text" placeholder="search" autocomplete="off" />
+        <input id="searchInput" type="search" placeholder="search" aria-label="Search links" autocomplete="off" />
       </div>
     </div>
 
@@ -869,14 +938,14 @@
             letterboxd
           </a>
           <div class="hover-dropdown">
-            <a href="#">
+            <button type="button" aria-expanded="false" aria-controls="youtubeMenu">
               <svg viewBox="0 0 24 24">
                 <path
                   d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
               </svg>
               youtube
-            </a>
-            <div class="sub-menu">
+            </button>
+            <div class="sub-menu" id="youtubeMenu" inert>
               <a href="https://www.youtube.com/@maniksinghme4ra/videos" target="_blank"
                 rel="noopener noreferrer">videos</a>
               <a href="https://www.youtube.com/@maniksinghmehra" target="_blank"
@@ -942,7 +1011,7 @@
               <path d="M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.8" />
             </svg>
             <a href="mailto:maniksinghmehra@gmail.com" class="email-link">email</a>
-            <span class="copy-btn" data-email="maniksinghmehra@gmail.com">⧉</span>
+            <button class="copy-btn" type="button" data-email="maniksinghmehra@gmail.com" aria-label="Copy email address">⧉</button>
           </div>
         </div>
       </div>
@@ -950,15 +1019,20 @@
     </div>
   </div>
 
-  <div id="shortcutOverlay" class="shortcut-overlay">
-    <div class="shortcut-box">
-      <div class="shortcut-title">shortcuts</div>
+  <div id="shortcutOverlay" class="shortcut-overlay" role="dialog" aria-modal="true" aria-labelledby="shortcutTitle"
+    aria-hidden="true" inert>
+    <div class="shortcut-box" tabindex="-1">
+      <button class="overlay-close" type="button" aria-label="Close shortcuts">&times;</button>
+      <h2 class="shortcut-title" id="shortcutTitle">shortcuts</h2>
       <div id="shortcutList"></div>
     </div>
   </div>
 
-  <div id="messageOverlay" class="message-overlay">
-    <div class="message-box">
+  <div id="messageOverlay" class="message-overlay" role="dialog" aria-modal="true" aria-labelledby="messageTitle"
+    aria-hidden="true" inert>
+    <div class="message-box" tabindex="-1">
+      <button class="overlay-close" type="button" aria-label="Close message">&times;</button>
+      <h2 class="visually-hidden" id="messageTitle">A message</h2>
       <div class="message-text">
         you have always been a true blessing right up to the end<br><br>
         <span class="highlight">thank you once again</span>
@@ -969,31 +1043,35 @@
   <script>
     const modeToggle = document.getElementById("modeToggle");
 
+    function updateModeToggle() {
+      const isDark = document.body.classList.contains("dark");
+      modeToggle.innerText = isDark ? "day" : "night";
+      modeToggle.setAttribute("aria-label", `Switch to ${isDark ? "day" : "night"} mode`);
+    }
+
     // PERSISTENCE LOGIC
     if (localStorage.getItem("mode") === "dark") {
       document.body.classList.add("dark");
-      modeToggle.innerText = "day";
     } else if (localStorage.getItem("mode") === "light") {
       document.body.classList.remove("dark");
-      modeToggle.innerText = "night";
     } else {
       const hour = new Date().getHours();
       if (hour >= 18 || hour <= 5) {
         document.body.classList.add("dark");
-        modeToggle.innerText = "day";
       }
     }
+    updateModeToggle();
 
     function toggleMode() {
       document.body.classList.toggle("dark");
       if (document.body.classList.contains("dark")) {
         localStorage.setItem("mode", "dark");
-        modeToggle.innerText = "day";
       } else {
         localStorage.setItem("mode", "light");
-        modeToggle.innerText = "night";
       }
+      updateModeToggle();
     }
+    modeToggle.addEventListener("click", toggleMode);
 
     // Active Link Highlighting
     const currentPath = window.location.pathname.split("/").pop();
@@ -1004,15 +1082,19 @@
       }
     });
 
-    // Unified Dropdown Toggle (Desktop & Mobile)
-    document.querySelectorAll(".hover-dropdown > a").forEach(link => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        const menu = this.nextElementSibling;
-        document.querySelectorAll(".sub-menu").forEach(m => {
-          if (m !== menu) m.classList.remove("open");
-        });
-        menu.classList.toggle("open");
+    const dropdownButtons = Array.from(document.querySelectorAll(".hover-dropdown > button"));
+
+    function setDropdownOpen(button, open) {
+      const menu = document.getElementById(button.getAttribute("aria-controls"));
+      button.setAttribute("aria-expanded", String(open));
+      menu.inert = !open;
+      menu.classList.toggle("open", open);
+    }
+
+    dropdownButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const shouldOpen = button.getAttribute("aria-expanded") !== "true";
+        dropdownButtons.forEach(otherButton => setDropdownOpen(otherButton, otherButton === button && shouldOpen));
       });
     });
 
@@ -1021,13 +1103,19 @@
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         const email = btn.dataset.email;
-        navigator.clipboard.writeText(email);
-
-        const originalText = btn.innerText;
-        btn.innerText = "✓";
-        setTimeout(() => {
-          btn.innerText = originalText;
-        }, 1000);
+        const originalLabel = btn.getAttribute("aria-label");
+        Promise.resolve().then(() => navigator.clipboard.writeText(email)).then(() => {
+          btn.innerText = "✓";
+          btn.setAttribute("aria-label", "Email address copied");
+          setTimeout(() => {
+            btn.innerText = "⧉";
+            btn.setAttribute("aria-label", originalLabel);
+          }, 1000);
+        }).catch(error => {
+          btn.setAttribute("aria-label", "Unable to copy email address");
+          console.error("Unable to copy email address.", error);
+          setTimeout(() => btn.setAttribute("aria-label", originalLabel), 2000);
+        });
       });
     });
 
@@ -1036,7 +1124,8 @@
       document.querySelectorAll(".sub-menu").forEach(menu => {
         const parent = menu.parentElement;
         if (!parent.contains(e.target)) {
-          menu.classList.remove("open");
+          const button = parent.querySelector(":scope > button");
+          setDropdownOpen(button, false);
         }
       });
     });
@@ -1078,26 +1167,38 @@
     // Inline Search & Filter Logic
     const searchWrap = document.querySelector(".search-wrap");
     const searchInput = document.getElementById("searchInput");
-    const filterableLinks = document.querySelectorAll(".icon-list a:not(.sub-menu a)");
+    const filterableLinks = Array.from(document.querySelectorAll(".icon-list a[href]"))
+      .filter(link => link.getAttribute("href") !== "#");
+    const dropdowns = Array.from(document.querySelectorAll(".hover-dropdown"));
 
     if (searchInput) {
       searchInput.addEventListener("input", () => {
-        const value = searchInput.value.toLowerCase();
+        const value = searchInput.value.trim().toLowerCase();
+        const matchingLinks = new Set();
         filterableLinks.forEach(link => {
-          const text = link.innerText.toLowerCase();
-          if (text.includes(value)) {
-            link.style.display = "flex";
-          } else {
-            link.style.display = "none";
-          }
+          const matches = !value || `${link.textContent} ${link.href}`.toLowerCase().includes(value);
+          link.style.display = matches ? "" : "none";
+          if (matches) matchingLinks.add(link);
+        });
+        dropdowns.forEach(dropdown => {
+          const button = dropdown.querySelector(":scope > button");
+          const hasMatchingDestination = Array.from(dropdown.querySelectorAll(".sub-menu a"))
+            .some(link => matchingLinks.has(link));
+          button.style.display = value && !hasMatchingDestination ? "none" : "";
+          setDropdownOpen(button, Boolean(value && hasMatchingDestination));
         });
       });
 
       searchInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-          const visible = [...filterableLinks].find(link => link.style.display !== "none");
-          if (visible) {
-            window.open(visible.href, "_blank");
+          const visible = filterableLinks.find(link =>
+            link.style.display !== "none" && link.closest(".link-item").style.display !== "none"
+          );
+          if (!visible) return;
+
+          const destination = new URL(visible.href);
+          if (["http:", "https:", "mailto:"].includes(destination.protocol)) {
+            window.open(destination.href, "_blank", "noopener,noreferrer");
           }
         }
       });
@@ -1105,8 +1206,12 @@
 
     // Auto-Generate Shortcuts
     const shortcutOverlay = document.getElementById("shortcutOverlay");
+    const messageOverlay = document.getElementById("messageOverlay");
     const shortcutList = document.getElementById("shortcutList");
     const allLinksForShortcuts = Array.from(document.querySelectorAll(".icon-list a:not(.email-link)"));
+    const modalBackground = [document.querySelector(".container"), modeToggle];
+    let activeOverlay = null;
+    let returnFocusTo = null;
 
     const shortcutMap = {};
     allLinksForShortcuts.forEach((link, index) => {
@@ -1119,28 +1224,94 @@
       shortcutMap[key] = link.href;
       const item = document.createElement("div");
       item.className = "shortcut-item";
-      item.innerHTML = `<span>${key}</span> ${label}`;
+      const keyLabel = document.createElement("span");
+      keyLabel.textContent = key;
+      item.append(keyLabel, document.createTextNode(` ${label}`));
       shortcutList.appendChild(item);
+    });
+
+    function openOverlay(overlay, trigger) {
+      if (activeOverlay) closeOverlay(false);
+      activeOverlay = overlay;
+      returnFocusTo = trigger;
+      overlay.inert = false;
+      overlay.setAttribute("aria-hidden", "false");
+      overlay.classList.add("active");
+      modalBackground.forEach(element => { element.inert = true; });
+      document.body.classList.add("modal-open");
+      overlay.querySelector(".overlay-close").focus();
+    }
+
+    function closeOverlay(restoreFocus = true) {
+      if (!activeOverlay) return;
+      const overlayToClose = activeOverlay;
+      activeOverlay = null;
+      overlayToClose.classList.remove("active");
+      overlayToClose.setAttribute("aria-hidden", "true");
+      overlayToClose.inert = true;
+      modalBackground.forEach(element => { element.inert = false; });
+      document.body.classList.remove("modal-open");
+      if (restoreFocus && returnFocusTo instanceof HTMLElement && returnFocusTo.isConnected) {
+        returnFocusTo.focus();
+      }
+      returnFocusTo = null;
+    }
+
+    document.querySelectorAll(".overlay-close").forEach(button => {
+      button.addEventListener("click", () => closeOverlay());
+    });
+    [shortcutOverlay, messageOverlay].forEach(overlay => {
+      overlay.addEventListener("click", event => {
+        if (event.target === overlay) closeOverlay();
+      });
     });
 
     // Extend Keyboard Logic
     document.addEventListener("keydown", function (e) {
       const key = e.key.toLowerCase();
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-      if (key === "/" && window.innerWidth > 600 && searchInput) {
+      if (activeOverlay) {
+        if (key === "escape") {
+          e.preventDefault();
+          closeOverlay();
+          return;
+        }
+        if (key === "tab") {
+          const focusable = Array.from(activeOverlay.querySelectorAll(
+            'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )).filter(element => element.getClientRects().length > 0);
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (!first) {
+            e.preventDefault();
+            activeOverlay.querySelector("[tabindex='-1']").focus();
+          } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+        return;
+      }
+      if (key === "escape") {
+        const expandedButton = dropdownButtons.find(button => button.getAttribute("aria-expanded") === "true");
+        if (expandedButton) {
+          const menu = document.getElementById(expandedButton.getAttribute("aria-controls"));
+          if (menu.contains(document.activeElement)) expandedButton.focus();
+        }
+        dropdownButtons.forEach(button => setDropdownOpen(button, false));
+        return;
+      }
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (key === "/" && searchWrap && searchWrap.offsetParent && searchInput) {
         e.preventDefault();
         searchInput.focus();
         return;
       }
       if (key === "?") {
         e.preventDefault();
-        shortcutOverlay.classList.add("active");
-        return;
-      }
-      if (key === "escape") {
-        document.getElementById("shortcutOverlay").classList.remove("active");
-        document.getElementById("messageOverlay").classList.remove("active");
-        document.body.classList.remove("modal-open");
+        openOverlay(shortcutOverlay, document.activeElement);
         return;
       }
       if (shortcutMap[key]) {
@@ -1148,31 +1319,10 @@
       }
     });
 
-    shortcutOverlay.addEventListener("click", function (e) {
-      if (e.target === shortcutOverlay) {
-        shortcutOverlay.classList.remove("active");
-      }
-    });
-
-    // UNIVERSAL TAP / CLICK (works everywhere)
-    const messageOverlay = document.getElementById("messageOverlay");
     const nameEl = document.querySelector(".name");
-
     nameEl.addEventListener("click", () => {
-      nameEl.style.transform = "scale(0.96)";
-      if (navigator.vibrate) navigator.vibrate(40); // kept a tiny tactile click feel
-      setTimeout(() => {
-        nameEl.style.transform = "";
-        document.body.classList.add("modal-open");
-        messageOverlay.classList.add("active");
-      }, 100);
-    });
-
-    messageOverlay.addEventListener("click", (e) => {
-      if (e.target === messageOverlay) {
-        messageOverlay.classList.remove("active");
-        document.body.classList.remove("modal-open");
-      }
+      if (navigator.vibrate) navigator.vibrate(40);
+      openOverlay(messageOverlay, nameEl);
     });
   </script>
 
