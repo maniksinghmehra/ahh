@@ -198,6 +198,138 @@
     .search-wrap {
       display: flex;
       justify-content: center;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .surprise-button {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      font: inherit;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      opacity: 0.65;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .surprise-button:hover:not(:disabled),
+    .surprise-button:focus-visible {
+      opacity: 1;
+    }
+
+    .surprise-button:disabled {
+      cursor: wait;
+      opacity: 0.9;
+    }
+
+    .dice-pair {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 1;
+      letter-spacing: 0;
+      user-select: none;
+    }
+
+    .die {
+      display: block;
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12));
+      transform-origin: center;
+      backface-visibility: hidden;
+    }
+
+    .die-face {
+      fill: var(--bg);
+      stroke: var(--text);
+      stroke-opacity: 0.3;
+      stroke-width: 1.5;
+    }
+
+    .die-pip {
+      fill: var(--text);
+    }
+
+    .surprise-button.rolling .die {
+      animation: dice-tumble 0.8s ease-out 1 both;
+    }
+
+    .surprise-button.rolling .die:nth-child(2) {
+      animation-name: dice-tumble-second;
+      animation-duration: 0.92s;
+      animation-delay: 0.05s;
+    }
+
+    .surprise-button.settling .die {
+      animation: dice-land 0.24s ease-out both;
+    }
+
+    .surprise-button.settling .die:nth-child(2) {
+      animation-delay: 0.03s;
+    }
+
+    @keyframes dice-tumble {
+      0% {
+        transform: translate(0, 0) rotate(0);
+      }
+
+      25% {
+        transform: translate(-3px, -7px) rotate(-28deg);
+      }
+
+      50% {
+        transform: translate(1px, -3px) rotate(18deg);
+      }
+
+      75% {
+        transform: translate(2px, -5px) rotate(-10deg);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0);
+      }
+    }
+
+    @keyframes dice-tumble-second {
+      0% {
+        transform: translate(0, 0) rotate(0);
+      }
+
+      30% {
+        transform: translate(3px, -4px) rotate(20deg);
+      }
+
+      60% {
+        transform: translate(-2px, -7px) rotate(-24deg);
+      }
+
+      82% {
+        transform: translate(-1px, -2px) rotate(10deg);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0);
+      }
+    }
+
+    @keyframes dice-land {
+      0% {
+        transform: translateY(-2px) scale(1.04);
+      }
+
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .surprise-button.rolling .die,
+      .surprise-button.settling .die {
+        animation: none;
+      }
     }
 
     #searchInput {
@@ -572,6 +704,12 @@
       transform: scale(1.1) translateY(-1px);
     }
 
+    .copy-status {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      opacity: 0.65;
+    }
+
     /* Dynamic Shortcut Overlay */
     .shortcut-overlay {
       position: fixed;
@@ -791,12 +929,17 @@
       }
 
       .search-wrap {
-        display: none !important;
+        justify-content: flex-start;
+        margin-bottom: 40px;
+      }
+
+      #searchInput {
+        display: none;
       }
 
       .name {
         text-align: left;
-        margin-bottom: 50px;
+        margin-bottom: 24px;
         font-size: 13px;
       }
 
@@ -876,6 +1019,15 @@
       <button class="name" type="button" aria-haspopup="dialog" aria-controls="messageOverlay">MANIK SINGH MEHRA</button>
       <div class="search-wrap">
         <input id="searchInput" type="search" placeholder="search" aria-label="Search links" autocomplete="off" />
+        <button class="surprise-button" id="surpriseButton" type="button"
+          aria-label="Roll two dice until they total seven and open a random link"
+          title="Roll two dice; when they total seven, open a random link">
+          <span class="dice-pair" aria-hidden="true">
+            <svg class="die" id="dieOne" viewBox="0 0 32 32" aria-hidden="true"></svg>
+            <svg class="die" id="dieTwo" viewBox="0 0 32 32" aria-hidden="true"></svg>
+          </span>
+        </button>
+        <span id="surpriseStatus" class="visually-hidden" aria-live="polite"></span>
       </div>
     </div>
 
@@ -1012,6 +1164,7 @@
             </svg>
             <a href="mailto:maniksinghmehra@gmail.com" class="email-link">email</a>
             <button class="copy-btn" type="button" data-email="maniksinghmehra@gmail.com" aria-label="Copy email address">⧉</button>
+            <span class="copy-status" aria-live="polite"></span>
           </div>
         </div>
       </div>
@@ -1104,17 +1257,28 @@
         e.stopPropagation();
         const email = btn.dataset.email;
         const originalLabel = btn.getAttribute("aria-label");
+        const status = btn.nextElementSibling;
+        btn.disabled = true;
+        status.textContent = "Copying…";
         Promise.resolve().then(() => navigator.clipboard.writeText(email)).then(() => {
           btn.innerText = "✓";
           btn.setAttribute("aria-label", "Email address copied");
+          status.textContent = "Copied";
           setTimeout(() => {
             btn.innerText = "⧉";
             btn.setAttribute("aria-label", originalLabel);
+            status.textContent = "";
+            btn.disabled = false;
           }, 1000);
         }).catch(error => {
           btn.setAttribute("aria-label", "Unable to copy email address");
+          status.textContent = "Copy failed";
           console.error("Unable to copy email address.", error);
-          setTimeout(() => btn.setAttribute("aria-label", originalLabel), 2000);
+          setTimeout(() => {
+            btn.setAttribute("aria-label", originalLabel);
+            status.textContent = "";
+            btn.disabled = false;
+          }, 2000);
         });
       });
     });
@@ -1203,6 +1367,126 @@
         }
       });
     }
+
+    const surpriseButton = document.getElementById("surpriseButton");
+    const surpriseStatus = document.getElementById("surpriseStatus");
+    const dieOne = document.getElementById("dieOne");
+    const dieTwo = document.getElementById("dieTwo");
+    const pipPositions = {
+      1: [[16, 16]],
+      2: [[9, 9], [23, 23]],
+      3: [[9, 9], [16, 16], [23, 23]],
+      4: [[9, 9], [23, 9], [9, 23], [23, 23]],
+      5: [[9, 9], [23, 9], [16, 16], [9, 23], [23, 23]],
+      6: [[9, 8], [23, 8], [9, 16], [23, 16], [9, 24], [23, 24]]
+    };
+    const surpriseLinks = Array.from(document.querySelectorAll(".icon-list a[href]"))
+      .filter(link => !link.classList.contains("email-link") && link.getAttribute("href") !== "#")
+      .filter(link => ["http:", "https:"].includes(new URL(link.href).protocol));
+
+    function renderDie(die, value) {
+      die.replaceChildren();
+      const face = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      face.setAttribute("class", "die-face");
+      face.setAttribute("x", "1");
+      face.setAttribute("y", "1");
+      face.setAttribute("width", "30");
+      face.setAttribute("height", "30");
+      face.setAttribute("rx", "6");
+      die.appendChild(face);
+
+      pipPositions[value].forEach(([cx, cy]) => {
+        const pip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        pip.setAttribute("class", "die-pip");
+        pip.setAttribute("cx", String(cx));
+        pip.setAttribute("cy", String(cy));
+        pip.setAttribute("r", "2.5");
+        die.appendChild(pip);
+      });
+    }
+
+    function showRandomDice() {
+      renderDie(dieOne, Math.floor(Math.random() * 6) + 1);
+      renderDie(dieTwo, Math.floor(Math.random() * 6) + 1);
+    }
+
+    renderDie(dieOne, 1);
+    renderDie(dieTwo, 1);
+
+    function openSurpriseDestination(link, reservedWindow) {
+      try {
+        if (reservedWindow && !reservedWindow.closed) {
+          reservedWindow.location.replace(link.href);
+          reservedWindow.opener = null;
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error("Unable to open the surprise destination.", error);
+        return false;
+      }
+    }
+
+    surpriseButton.addEventListener("click", () => {
+      if (!surpriseLinks.length) {
+        surpriseStatus.textContent = "No links are available.";
+        return;
+      }
+
+      surpriseStatus.textContent = "Rolling the dice.";
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reservedWindow = window.open("about:blank", "_blank");
+      if (!reservedWindow) {
+        surpriseStatus.textContent = "Pop-up blocked. The selected site will open in this tab.";
+      }
+      surpriseButton.disabled = true;
+      const combinations = [[1, 6], [2, 5], [3, 4], [4, 3], [5, 2], [6, 1]];
+
+      function landDice() {
+        if (reservedWindow && reservedWindow.closed) {
+          surpriseButton.disabled = false;
+          surpriseButton.classList.remove("rolling", "settling");
+          surpriseStatus.textContent = "The new tab was closed before the roll finished.";
+          return;
+        }
+
+        const [firstRoll, secondRoll] = combinations[Math.floor(Math.random() * combinations.length)];
+        renderDie(dieOne, firstRoll);
+        renderDie(dieTwo, secondRoll);
+        surpriseButton.classList.remove("rolling");
+        surpriseButton.classList.add("settling");
+        const link = surpriseLinks[Math.floor(Math.random() * surpriseLinks.length)];
+        surpriseStatus.textContent = reservedWindow
+          ? `Seven. Opening ${link.textContent.trim()}.`
+          : `Seven. Opening ${link.textContent.trim()} in this tab.`;
+
+        window.setTimeout(() => {
+          surpriseButton.classList.remove("settling");
+          surpriseButton.disabled = false;
+          if (reservedWindow && reservedWindow.closed) {
+            surpriseStatus.textContent = "The new tab was closed before the link opened.";
+            return;
+          }
+          if (!openSurpriseDestination(link, reservedWindow)) {
+            surpriseStatus.textContent = `Opening ${link.textContent.trim()} in this tab.`;
+            window.location.assign(link.href);
+          }
+        }, 1200);
+      }
+
+      if (reducedMotion) {
+        landDice();
+        return;
+      }
+
+      surpriseButton.classList.add("rolling");
+      showRandomDice();
+      const rollInterval = window.setInterval(showRandomDice, 260);
+      window.setTimeout(() => {
+        window.clearInterval(rollInterval);
+        landDice();
+      }, 880);
+    });
 
     // Auto-Generate Shortcuts
     const shortcutOverlay = document.getElementById("shortcutOverlay");
@@ -1304,7 +1588,7 @@
         return;
       }
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (key === "/" && searchWrap && searchWrap.offsetParent && searchInput) {
+      if (key === "/" && searchWrap && searchInput.offsetParent) {
         e.preventDefault();
         searchInput.focus();
         return;
